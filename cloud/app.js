@@ -27,6 +27,8 @@ app.get('/list', function(req, res) {
   });
 });
 
+
+// in a real application, there should be a separate "app.post('/add', ...)" here for receiving the POST data
 app.get('/add', function(req, res) {
   var User = Parse.Object.extend("_User");
   var user = new User();
