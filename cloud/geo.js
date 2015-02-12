@@ -16,3 +16,15 @@ exports.geocode = function(address) {
     }
   );
 };
+
+//sample code on how to use it.
+/*
+ queryReady = geo.geocode(zip_code).then(function(location) {
+ if (!location) {
+ res.send({locations: [], educators: []});
+ return;
+ }
+ var geopoint = new Parse.GeoPoint({latitude: location.latitude, longitude: location.longitude});
+ locQuery.withinMiles("coordinates", geopoint, 50);
+ });
+ */
