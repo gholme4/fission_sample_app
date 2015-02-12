@@ -1,21 +1,82 @@
 
 <html>
-  <head>
-    <title>My ParseApp site</title>
-    <style>
-    body { font-family: Helvetica, Arial, sans-serif; }
-    div { width: 800px; height: 400px; margin: 40px auto; padding: 20px; border: 2px solid #5298fc; }
-    h1 { font-size: 30px; margin: 0; }
-    p { margin: 40px 0; }
-    em { font-family: monospace; }
-    a { color: #5298fc; text-decoration: none; }
-    </style>
-  </head>
-  <body>
-    <div>
-      <h1>Congratulations! You're already hosting with Parse.</h1>
-      <p>To get started, edit this file at <em>public/index.html</em> and start adding static content.</p>
-      <p>If you want something a bit more dynamic, delete this file and check out <a href="https://parse.com/docs/hosting_guide#webapp">our hosting docs</a>.</p>
-    </div>
-  </body>
+<head>
+	<title>Fission Parse Sample app</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.0/css/foundation.min.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+</head>
+<body>
+	<div class="row">
+		<div class="medium-12 columns">
+			<h1>Fission Sample App</h1>
+			<form id="signup-form" validate>
+				<h4> Sign up </h4>
+				<div>
+					<input type="text" name="username" placeholder="username" required/>
+				</div>
+				<div>
+					<input type="text" name="email" placeholder="email" required/>
+				</div>
+				<div>
+					<input type="password" name="password" placeholder="password" required/>
+				</div>
+				<br>
+				<input id="signup-button" class="button" type="submit" value="Submit">
+			</form>
+
+			<div id="response"></div>
+		</div>
+	</div>
+
+	<script>
+	$(function () {
+
+		$("#signup-form").on('submit', function (e) {
+
+			e.preventDefault();
+
+			$.ajax({
+				url: '/add',
+				dataType: "text",
+				data: $( this ).serialize(),
+				type: "GET",
+				timeout: 10000,
+				cache: false,
+				beforeSend: function( ) {
+					$("#signup-button").slideUp();
+					
+				}
+			}).always(function () {
+				$("#signup-button").slideDown();
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+				
+				alert("There was an error making this request. Please try again.");
+				console.debug(errorThrown);
+
+			}).done(function(data) {
+				console.log(data);
+				$("#response").html(data);
+				/* Parse data for errors. If JSON.parse() triggers an exception, display error */
+				try {
+					var resultObj = JSON.parse(data);
+
+					self.showListResults(resultObj.results, resultObj.count);
+					
+				}
+				catch(e)
+				{
+					//alert("There was an error making this request. Please try again.");
+					//console.debug(e);
+				}
+
+			});
+
+		});
+		
+
+	});
+
+	</script>
+</body>
 </html>

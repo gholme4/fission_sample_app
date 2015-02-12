@@ -1,0 +1,131 @@
+
+<html>
+<head>
+	<title>Fission Parse Sample app</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.0/css/foundation.min.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.0.19.min.js"></script>
+	<script>
+
+	$(function () {
+
+		Parse.initialize('wqWmrPHLwUIl1afxPQovDP6NWPnGL2ShQdlAUpd7', 'FMzRd0efAayye3DFngoGH8L1JIY8BRxDojMVjYZi');
+
+		// Simple syntax to create a new subclass of Parse.Object.
+		var User = Parse.Object.extend("User");
+		 
+		// Create a new instance of that class.
+		var user = new User();
+		
+		$("#run-code-button").on("click", function (e) {
+			user.set("username", "fission_user");
+			user.set("password", "fission_password");
+			user.set("email", "fission_user@fissionstrategy.com");
+
+			user.save(null, {
+				success: function(user) {
+					// Execute any logic that should take place after the object is saved.
+					$("#response").html('New object created with objectId: ' + user.id);
+				},
+				error: function(user, error) {
+					// Execute any logic that should take place if the save fails.
+					// error is a Parse.Error with an error code and message.
+					$("#response").html('Failed to create new object, with error code: ' + error.message);
+				}
+			});
+
+		});
+		
+	});
+		
+
+
+	</script>
+</head>
+<body>
+	<div class="row">
+		<div class="medium-12 columns">
+			<h1>Fission Sample App</h1>
+				<h4> Run this code </h4>
+				<code>
+					// Simple syntax to create a new subclass of Parse.Object.
+					<br>
+
+					var User = Parse.Object.extend("User");
+					 <br>
+					 <br>
+
+					// Create a new instance of that class.
+					<br>
+
+					var user = new User();
+					<br>
+					user.set("score", 1337);
+					<br>
+					user.set("playerName", "Sean Plott");
+					<br>
+					user.set("cheatMode", false);
+				</code>
+				<br>
+				<br>
+				<input id="run-code-button" class="button" type="submit" value="Run Code">
+
+			<div id="response"></div>
+		</div>
+	</div>
+
+	<script>
+	$(function () {
+
+		$("#signup-form").on('submit', function (e) {
+
+			e.preventDefault();
+
+			$.ajax({
+				url: '/add',
+				dataType: "text",
+				data: $( this ).serialize(),
+				type: "GET",
+				timeout: 10000,
+				cache: false,
+				beforeSend: function( ) {
+					$("#signup-button").slideUp();
+					
+				}
+			}).always(function () {
+				$("#signup-button").slideDown();
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+				
+				alert("There was an error making this request. Please try again.");
+				console.debug(errorThrown);
+
+			}).done(function(data) {
+				console.log(data);
+				$("#response").html(data);
+				/* Parse data for errors. If JSON.parse() triggers an exception, display error */
+				try {
+					var resultObj = JSON.parse(data);
+
+					self.showListResults(resultObj.results, resultObj.count);
+					
+				}
+				catch(e)
+				{
+					//alert("There was an error making this request. Please try again.");
+					//console.debug(e);
+				}
+
+			});
+
+		});
+		
+
+	});
+
+	</script>
+</body>
+</html>
+
+
+
+ 

@@ -12,6 +12,27 @@ app.use(express.bodyParser());    // Middleware for reading request body
 
 // use "app.get(...)" and "app.post(...)" for GET and POST
 
+app.use(function (req, res, next) {
+  
+  res.set('Access-Control-Allow-Origin', '*' );
+  res.set('Access-Control-Allow-Methods', 'POST');
+  res.set('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
+
+  // Check for valid domain access
+  /*
+  if (_.indexOf(allowed_origins, req.get('origin')) > -1) {
+    res.set('Access-Control-Allow-Origin', req.get('origin') );
+    res.set('Access-Control-Allow-Methods', 'POST');
+    res.set('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
+  }
+  else
+  {
+    res.send(500);
+  }
+  */
+
+  next();
+});
 app.get('/test', function(req, res) {
   console.log('this is the homepage');
   res.render('main', {});
@@ -32,12 +53,14 @@ app.get('/list', function(req, res) {
 app.get('/add', function(req, res) {
   var User = Parse.Object.extend("_User");
   var user = new User();
-  user.set('username', 'user'+Math.ceil(Math.random()*100));
-  user.set('password', 'fission');
+
+  user.set('username', req.param("username", null) );
+  user.set('password', req.param("password", null) );
+  user.set('email', req.param("email", null) );
   user.save(null, {
     success: function(item) {
       alert(item.get('username'));
-      res.render('new_user', {user: item});
+      res.json({user: item});
     },
     error: function(item, error) {
       alert(error.message);
